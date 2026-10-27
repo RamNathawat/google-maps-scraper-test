@@ -1,0 +1,13 @@
+title,category,address,web_site,phone,review_count,review_rating,emails,cid,status,link,latitude,longitude,place_id
+"Cafe Roma","Cafe","123 Main St, Athens, Greece","https://caferoma.gr","+30 210 1234567",245,4.5,"info@caferoma.gr","1234567890","Operational","https://maps.google.com/?cid=1234567890",37.9838,23.7275,"ChIJ1"
+"Athens Bistro","Restaurant","45 Ermou St, Athens, Greece","https://athensbistro.com","+30 210 9876543",189,4.2,"hello@athensbistro.com","2345678901","Operational","https://maps.google.com/?cid=2345678901",37.9755,23.7348,"ChIJ2"
+"Pizza Palace","Restaurant","78 Voulis St, Athens, Greece","","",52,3.8,"","3456789012","Operational","https://maps.google.com/?cid=3456789012",37.9760,23.7310,"ChIJ3"
+"Green Garden Cafe","Cafe","12 Panepistimiou, Athens, Greece","https://greengarden.gr","+30 210 5551234",412,4.7,"contact@greengarden.gr","4567890123","Operational","https://maps.google.com/?cid=4567890123",37.9810,23.7335,"ChIJ4"
+"The Rooftop Bar","Bar","90 Mitropoleos, Athens, Greece","https://rooftopbar.gr","+30 210 5559876",88,4.0,"book@rooftopbar.gr","5678901234","Operational","https://maps.google.com/?cid=5678901234",37.9765,23.7280,"ChIJ5"
+"Mama Mia Taverna","Restaurant","34 Adrianou St, Athens, Greece","https://mamamia.gr","+30 210 3331111",567,4.8,"reservations@mamamia.gr","6789012345","Operational","https://maps.google.com/?cid=6789012345",37.9740,23.7260,"ChIJ6"
+"Quick Bites","Fast food","55 Stadiou St, Athens, Greece","","",23,3.2,"","7890123456","Operational","https://maps.google.com/?cid=7890123456",37.9795,23.7320,"ChIJ7"
+"Cafe Roma","Cafe","123 Main St, Athens, Greece","https://caferoma.gr","+30 210 1234567",245,4.5,"info@caferoma.gr","1234567890","Operational","https://maps.google.com/?cid=1234567890",37.9838,23.7275,"ChIJ1"
+"Sunset Lounge","Lounge","8 Kolokotroni, Athens, Greece","https://sunsetlounge.com","+30 210 7772222",156,4.3,"info@sunsetlounge.com","8901234567","Operational","https://maps.google.com/?cid=8901234567",37.9780,23.7290,"ChIJ8"
+"Fresh Juice Bar","Juice bar","22 Voukourestiou, Athens, Greece","https://freshjuice.gr","",34,4.1,"","9012345678","Operational","https://maps.google.com/?cid=9012345678",37.9805,23.7340,"ChIJ9"
+"Athens Grill House","Restaurant","67 Nikis St, Athens, Greece","https://athensgrill.gr","+30 210 8884444",298,4.4,"eat@athensgrill.gr","0123456789","Operational","https://maps.google.com/?cid=0123456789",37.9750,23.7305,"ChIJ10"
+"The Coffee Corner","Coffee shop","3 Syntagma Sq, Athens, Greece","","",15,3.5,"","1122334455","","https://maps.google.com/?cid=1122334455",37.9755,23.7348,"ChIJ11"

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lead Intelligence Pipeline — Deduplicate, qualify, filter, and generate outreach for Google Maps leads.">
+  <title>Lead Intelligence Pipeline</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-title">
+      <span class="icon">📊</span>
+      <h1>Lead Intelligence Pipeline</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" id="btn-new-upload">📂 New Upload</button>
+      <button class="btn btn-primary" id="btn-export-csv">📥 Export CSV</button>
+    </div>
+  </header>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Upload Section -->
+  <section id="upload-section">
+    <div class="card">
+      <div class="upload-zone" id="upload-zone">
+        <div class="icon">📁</div>
+        <h3>Drop your scraper output here</h3>
+        <p>Supports CSV and JSON files from Google Maps Scraper</p>
+        <p style="margin-top:8px;color:var(--accent-purple);font-size:0.8rem;">Click to browse or drag & drop</p>
+        <input type="file" id="file-input" accept=".csv,.json">
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard (hidden until upload) -->
+  <div id="dashboard" class="hidden">
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="label">Total Leads</div>
+        <div class="value" id="stat-total">0</div>
+        <div class="sub"><span id="stat-shown">0</span> shown</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Duplicates Removed</div>
+        <div class="value" id="stat-dupes" style="color:var(--accent-purple)">0</div>
+      </div>
+      <div class="stat-card success">
+        <div class="label">With Email</div>
+        <div class="value" id="stat-emails">0</div>
+        <div class="sub" id="stat-email-sub"></div>
+      </div>
+      <div class="stat-card hot">
+        <div class="label">🔥 Hot Leads</div>
+        <div class="value" id="stat-hot">0</div>
+      </div>
+      <div class="stat-card warm">
+        <div class="label">🟡 Warm Leads</div>
+        <div class="value" id="stat-warm">0</div>
+      </div>
+      <div class="stat-card cold">
+        <div class="label">🔵 Cold Leads</div>
+        <div class="value" id="stat-cold">0</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="leads">📋 Leads Table</button>
+      <button class="tab" data-tab="scoring">⚙️ AI Scoring</button>
+      <button class="tab" data-tab="outreach">✉️ Outreach</button>
+    </div>
+
+    <!-- Tab: Leads Table -->
+    <div class="tab-content active" id="tab-leads">
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span>Search</span>
+          <input type="text" id="filter-search" placeholder="Name, address, city...">
+        </div>
+        <div class="filter-group">
+          <span>Category</span>
+          <select id="filter-category"><option value="">All Categories</option></select>
+        </div>
+        <div class="filter-group">
+          <span>Score Tier</span>
+          <select id="filter-tier">
+            <option value="">All</option>
+            <option value="hot">🔥 Hot</option>
+            <option value="warm">🟡 Warm</option>
+            <option value="cold">🔵 Cold</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <span>Min Rating</span>
+          <input type="number" id="filter-rating" min="0" max="5" step="0.5" placeholder="0" style="width:70px">
+        </div>
+        <div class="filter-group">
+          <span>Min Reviews</span>
+          <input type="number" id="filter-reviews" min="0" placeholder="0" style="width:80px">
+        </div>
+        <label><input type="checkbox" id="filter-has-email"> Has Email</label>
+        <label><input type="checkbox" id="filter-has-website"> Has Website</label>
+      </div>
+
+      <!-- Data Table -->
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-col="title">Business <span class="sort-icon">↕</span></th>
+                <th data-col="category">Category <span class="sort-icon">↕</span></th>
+                <th data-col="city">Location <span class="sort-icon">↕</span></th>
+                <th data-col="reviewRating">Rating <span class="sort-icon">↕</span></th>
+                <th data-col="email">Email <span class="sort-icon">↕</span></th>
+                <th data-col="phone">Phone <span class="sort-icon">↕</span></th>
+                <th data-col="score">Score <span class="sort-icon">↕</span></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leads-tbody">
+              <tr><td colspan="8" class="empty-state"><div class="icon">📊</div><p>Upload a file to see leads</p></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" style="padding:12px 16px;">
+          <span id="page-info">Page 1 of 1</span>
+          <div class="pagination-btns">
+            <button class="btn btn-sm btn-secondary" id="page-prev" disabled>← Prev</button>
+            <button class="btn btn-sm btn-secondary" id="page-next" disabled>Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: AI Scoring Config -->
+    <div class="tab-content" id="tab-scoring">
+      <div class="card">
+        <div class="card-header">
+          <h2>🎯 Niche Targeting</h2>
+        </div>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:10px;">Enter comma-separated keywords to boost matching categories (e.g., "restaurant, cafe, bakery")</p>
+        <input type="text" id="niche-keywords" class="niche-keywords-input" placeholder="e.g., restaurant, cafe, bakery, hotel">
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h2>⚙️ Score Weights</h2>
+        </div>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;">Adjust the weight of each signal (total should be ~100 for best results).</p>
+        <div class="score-config">
+          <label>Has Email <input type="number" data-weight="email" value="20" min="0" max="50"></label>
+          <label>Has Website <input type="number" data-weight="website" value="15" min="0" max="50"></label>
+          <label>Has Phone <input type="number" data-weight="phone" value="10" min="0" max="50"></label>
+          <label>Rating Quality <input type="number" data-weight="rating" value="15" min="0" max="50"></label>
+          <label>Review Volume <input type="number" data-weight="reviews" value="15" min="0" max="50"></label>
+          <label>Niche Match <input type="number" data-weight="niche" value="10" min="0" max="50"></label>
+          <label>Complete Address <input type="number" data-weight="address" value="5" min="0" max="50"></label>
+          <label>Business Status <input type="number" data-weight="status" value="10" min="0" max="50"></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>📖 How Scoring Works</h2></div>
+        <div style="color:var(--text-secondary);font-size:0.85rem;line-height:1.8;">
+          <p>Each lead is scored 0–100 based on these signals:</p>
+          <ul style="margin:10px 0 0 18px;">
+            <li><strong>🔥 Hot (70–100)</strong> — High-value leads ready for outreach</li>
+            <li><strong>🟡 Warm (40–69)</strong> — Promising leads worth investigating</li>
+            <li><strong>🔵 Cold (0–39)</strong> — Low-priority or incomplete leads</li>
+          </ul>
+          <p style="margin-top:12px;">The scoring is 100% heuristic-based — no paid AI APIs needed. Adjust the weights above to match your priorities.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Outreach Generator -->
+    <div class="tab-content" id="tab-outreach" id="outreach-section">
+      <div class="card">
+        <div class="card-header">
+          <h2>✉️ Outreach Generator</h2>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm btn-secondary" id="btn-copy-outreach">📋 Copy</button>
+            <button class="btn btn-sm btn-primary" id="btn-export-emails">📥 Export All Emails</button>
+          </div>
+        </div>
+        <div class="template-select">
+          <select id="template-select">
+            <option value="introduction">🤝 Introduction</option>
+            <option value="service_offer">💼 Service Offer</option>
+            <option value="partnership">🤝 Partnership Proposal</option>
+          </select>
+        </div>
+        <div class="outreach-grid">
+          <div>
+            <h3 style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">Template Editor</h3>
+            <div class="template-editor">
+              <textarea id="template-editor" placeholder="Write your outreach template..."></textarea>
+            </div>
+            <div class="merge-fields">
+              <span style="font-size:0.72rem;color:var(--text-muted);margin-right:4px;">Insert:</span>
+              <button class="merge-tag" data-tag="{{business_name}}">business_name</button>
+              <button class="merge-tag" data-tag="{{category}}">category</button>
+              <button class="merge-tag" data-tag="{{city}}">city</button>
+              <button class="merge-tag" data-tag="{{email}}">email</button>
+              <button class="merge-tag" data-tag="{{phone}}">phone</button>
+              <button class="merge-tag" data-tag="{{website}}">website</button>
+              <button class="merge-tag" data-tag="{{rating}}">rating</button>
+              <button class="merge-tag" data-tag="{{review_count}}">review_count</button>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">Preview <span id="preview-lead-name" style="color:var(--accent-teal);"></span></h3>
+            <div class="preview-box" id="outreach-preview">
+              <span style="color:var(--text-muted);">Upload leads and select one to preview outreach...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /dashboard -->
+</div><!-- /app -->
+<script src="app.js"></script>
+</body>
+</html>
